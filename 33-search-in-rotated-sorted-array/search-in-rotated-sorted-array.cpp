@@ -1,44 +1,29 @@
-class Solution
-{
+class Solution {
 public:
-    int search(vector<int> &nums, int target)
-    {
-        int low = 0;
-        int high = nums.size() - 1;
+    int binarySearch(vector<int>& nums, int si, int ei, int target) {
+        if (si > ei) return -1;   
 
-        while (low <= high)
-        {
-            int mid = (low + high) / 2;
+        int mid = si + (ei - si) / 2;
 
-            if (nums[mid] == target)
-            {
-                return mid;
-            }
+        if (nums[mid] == target) return mid;
 
-            if (nums[low] <= nums[mid])
-            {
-                if (nums[low] <= target && target < nums[mid])
-                {
-                    high = mid - 1;
-                }
-                else
-                {
-                    low = mid + 1;
-                }
-            }
+        // Left half 
+        if (nums[si] <= nums[mid]) {
+            if (nums[si] <= target && target < nums[mid])
+                return binarySearch(nums, si, mid - 1, target);
             else
-            {
-                if (nums[mid] <= target && target <= nums[high])
-                {
-                    low = mid + 1;
-                }
-                else
-                {
-                    high = mid - 1;
-                }
-            }
+                return binarySearch(nums, mid + 1, ei, target);
         }
+        // Right half
+        else {
+            if (nums[mid] < target && target <= nums[ei])
+                return binarySearch(nums, mid + 1, ei, target);
+            else
+                return binarySearch(nums, si, mid - 1, target);
+        }
+    }
 
-        return -1;
+    int search(vector<int>& nums, int target) {
+        return binarySearch(nums, 0, nums.size() - 1, target);
     }
 };
